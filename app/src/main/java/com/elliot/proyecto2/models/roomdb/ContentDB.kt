@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [Content::class],
-    version = 2,
+    version = 1,
     exportSchema = true
 )
 abstract class ContentDB : RoomDatabase() {

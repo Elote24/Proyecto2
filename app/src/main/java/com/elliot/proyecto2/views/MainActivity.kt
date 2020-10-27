@@ -3,7 +3,6 @@ package com.elliot.proyecto2.views
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -12,10 +11,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.elliot.proyecto2.R
 import com.elliot.proyecto2.adapters.CategoriaAdapter
-import com.elliot.proyecto2.models.dao.ContentDAO
 import com.elliot.proyecto2.models.entities.Categoria
 import com.elliot.proyecto2.models.entities.Content
-import com.elliot.proyecto2.models.roomdb.ContentDB
 import com.elliot.proyecto2.viewmodels.MainActivityViewModel
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -48,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         val fabver = findViewById<FloatingActionButton>(R.id.fabActionDialogUsuarios)
 
         fabver.setOnClickListener {
-            val intent = Intent(this, Usuarios::class.java)
+            val intent = Intent(this, ActivityUsuarios::class.java)
             startActivity(intent)
         }
 
@@ -80,7 +77,7 @@ class MainActivity : AppCompatActivity() {
 
 
         val  buttonSave = findViewById<MaterialButton>(R.id.button_save)
-        buttonSave.setOnClickListener{
+        buttonSave.setOnClickListener {
             var textoRadio = ""
             if (radioBasico.isChecked) {
                 textoRadio = radioBasico.text.toString()
@@ -106,8 +103,8 @@ class MainActivity : AppCompatActivity() {
                 textoCategoria += checkAccion.text.toString() + "\n"
             }
             val nombre = editNombre.text.toString()
-            val telefono = editTelefono.toString()
-            val correo = editCorreo.toString()
+            val telefono = editTelefono.text.toString()
+            val correo = editCorreo.text.toString()
             val plan = textoRadio
             val categoria = textoCategoria
 
@@ -115,21 +112,66 @@ class MainActivity : AppCompatActivity() {
                 nombre = nombre,
                 telefono = telefono,
                 correo = correo,
-                plan =plan,
-                categorias=categoria
+                plan = plan,
+                categorias = categoria
             )
+
+            if (valida()!=""){
+                val alertDialog = AlertDialog.Builder(this)
+                    .setTitle("LLene toda la información")
+                    .setMessage(
+                        valida()
+                    )
+                    .create()
+
+                alertDialog.show()
+                return@setOnClickListener
+            }
 
             MainActivityViewModel.insertContent(content)
         }
 
-        MainActivityViewModel.notifyInsertContent().observe(this,{ succesful ->
-            if (succesful){
-                Toast.makeText(this,"Guardado exitoso", Toast.LENGTH_LONG).show()
-                finish()
-            }else{
-                Toast.makeText(this,"No se pudo guardar", Toast.LENGTH_LONG).show()
-            }
-        })
+            MainActivityViewModel.notifyInsertContent().observe(this,{ succesful ->
+                    if (succesful){
+                        Toast.makeText(this,"Guardado exitoso", Toast.LENGTH_LONG).show()
+                        limpiar()
+                    }else{
+                        Toast.makeText(this,"No se pudo guardar", Toast.LENGTH_LONG).show()
+                    }
+                })
+    }
+
+    fun  limpiar(){
+        radioBasico.isChecked
+        checkAccion.isChecked=false
+        checkComedia.isChecked=false
+        checkRomantico.isChecked=false
+        checkAnime.isChecked=false
+        checkTerror.isChecked=false
+        editNombre.setText("")
+        editTelefono.setText("")
+        editCorreo.setText("")
+    }
+
+    fun  valida(): String {
+        var texto=""
+        if(editNombre.text.toString()==""){
+            texto+="Debe ingresar el Nombre \n"
+        }
+        if(editTelefono.text.toString()==""){
+            texto+="Debe ingresar el Telefono \n "
+        }
+        if(editCorreo.text.toString()==""){
+            texto+="Debe ingresar el Correo \n"
+        }
+        if(radioBasico.isChecked==false &&  radioEstandar.isChecked==false && radioPremium.isChecked==false){
+            texto+="Debe seleccionar un plan \n"
+        }
+        if(checkAccion.isChecked==false &&  checkAnime.isChecked==false && checkComedia.isChecked==false
+            && checkRomantico.isChecked==false && checkTerror.isChecked==false ){
+            texto+="Debe seleccionar una categoria minimo \n"
+        }
+        return texto
     }
 
 

@@ -12,11 +12,4 @@ data class Content (
     val correo: String,
     val plan: String,
     val categorias:String
-){
-
-    override fun equals(other: Any?): Boolean {
-        if (other is Content)
-            return other.id==this.id
-        return false
-    }
-}
+)
