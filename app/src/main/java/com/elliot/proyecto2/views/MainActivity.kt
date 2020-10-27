@@ -156,20 +156,20 @@ class MainActivity : AppCompatActivity() {
     fun  valida(): String {
         var texto=""
         if(editNombre.text.toString()==""){
-            texto+="Debe ingresar el Nombre \n"
+            texto+="*DEBE INGRESAR EL NOMBRE \n"
         }
         if(editTelefono.text.toString()==""){
-            texto+="Debe ingresar el Telefono \n "
+            texto+="*DEBE INGRESAR EL TELEFONO \n"
         }
         if(editCorreo.text.toString()==""){
-            texto+="Debe ingresar el Correo \n"
+            texto+="*DEBE INGRESAR EL CORREO \n"
         }
         if(radioBasico.isChecked==false &&  radioEstandar.isChecked==false && radioPremium.isChecked==false){
-            texto+="Debe seleccionar un plan \n"
+            texto+="*DEBE SELECCIONAR UN PLAN \n"
         }
         if(checkAccion.isChecked==false &&  checkAnime.isChecked==false && checkComedia.isChecked==false
             && checkRomantico.isChecked==false && checkTerror.isChecked==false ){
-            texto+="Debe seleccionar una categoria minimo \n"
+            texto+="*DEBE SELECCIONAR UNA CATEGORIA MINIMO \n"
         }
         return texto
     }
